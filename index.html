@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saneamento Já!</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #eef3f7;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(to right, #0077cc, #0099ff);
+      padding: 80px 20px;
+      text-align: center;
+      color: white;
+      animation: fadeInDown 1.5s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 18px;
+      margin-top: 0;
+    }
+
+    nav {
+      background-color: #005fa3;
+      text-align: center;
+      padding: 15px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      color: #0077cc;
+    }
+
+    .botao {
+      background: #0077cc;
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 16px;
+      transition: 0.3s;
+      animation: fadeIn 2s ease;
+    }
+
+    .botao:hover {
+      background: #005fa3;
+      transform: scale(1.05);
+    }
+
+    .galeria {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .galeria img {
+      width: 100%;
+      max-width: 300px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 0 5px #999;
+    }
+
+    #map {
+      height: 300px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    footer {
+      background-color: #0077cc;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+      margin-top: 60px;
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 30px;
+      }
+
+      .galeria {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>💧 Saneamento Já!</h1>
+    <p>Unidos pelo nosso bairro: denuncie, participe, transforme.</p>
+  </header>
+
+  <nav>
+    <a href="como-funciona.html">Como Funciona</a>
+    <a href="problema.html">Relatar Problema</a>
+    <a href="jogo.html">Jogo</a>
+  </nav>
+
+  <div class="container">
+
+    <section id="sobre">
+      <h2>🔍 Sobre o Projeto</h2>
+      <p>Este site foi criado para ajudar a comunidade a identificar problemas de saneamento. Aqui você pode relatar problemas como esgoto, lixo, falta de água e visualizar denúncias em um mapa.</p>
+      <a href="problema.html" class="botao">📸 Enviar Denúncia</a>
+    </section>
+
+    <section id="dados">
+      <h2>📊 Por que isso importa?</h2>
+      <p>➡️ 35 milhões de brasileiros não têm acesso à água potável.</p>
+      <p>➡️ 100 milhões vivem sem coleta de esgoto.</p>
+      <p>➡️ A falta de saneamento causa doenças, poluição e mortes evitáveis.</p>
+    </section>
+
+    <section id="galeria">
+      <h2>📸 Problemas no Bairro</h2>
+      <div class="galeria">
+       <img src="imagem1.jpeg" alt="Vazamento">
+        <img src="imagem2.jpeg" alt="Lixo nas ruas">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmoUXZPxQpHXXGLo4qAr9x549nGiP_AfYkMj8ryuFfHW8hj3QcCc_1gOk&s=10" alt="Esgoto exposto">
+      </div>
+    </section>
+
+    <section id="mapa">
+      <h2>🗺️ Denúncias Recentes</h2>
+      <div id="map"></div>
+    </section>
+
+    <section id="faq">
+      <h2>❓ Dúvidas Frequentes</h2>
+      <p><strong>Como posso denunciar?</strong> Vá até a aba “Relatar Problema” e preencha o formulário.</p>
+      <p><strong>Quem vai resolver o problema?</strong> A equipe do projeto irá encaminhar a denúncia aos órgãos locais responsáveis.</p>
+      <p><strong>O site é oficial?</strong> Não, é um projeto estudantil com proposta comunitária.</p>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Saneamento Já - Projeto de Inovação Comunitária</p>
+    <p>
+      Links úteis: 
+      <a href="https://www.gov.br/ana" target="_blank">Agência Nacional de Águas</a> |
+      <a href="https://www.gov.br/saude" target="_blank">Ministério da Saúde</a>
+    </p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    const mapa = L.map('map').setView([-14.2350, -51.9253], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(mapa);
+
+    // Exemplo de marcadores simulados
+    const denuncias = [
+      { lat: -23.5505, lon: -46.6333, desc: "Vazamento de esgoto - SP" },
+      { lat: -22.9068, lon: -43.1729, desc: "Lixo acumulado - RJ" },
+      { lat: -19.9167, lon: -43.9345, desc: "Falta de água - BH" }
+    ];
+
+    denuncias.forEach(d => {
+      L.marker([d.lat, d.lon])
+        .addTo(mapa)
+        .bindPopup(d.desc);
+    });
+  </script>
+
+</body>
+</html>
