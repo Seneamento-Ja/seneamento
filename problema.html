@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>📍 Denunciar Problema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #0077cc;
+    }
+
+    form {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    #map {
+      height: 300px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    .sucesso {
+      text-align: center;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📸 Denunciar um Problema</h1>
+
+  <form id="formDenuncia">
+    <label for="estado">Estado:</label>
+    <input type="text" id="estado" required>
+
+    <label for="cidade">Cidade:</label>
+    <input type="text" id="cidade" required>
+
+    <label for="bairro">Bairro:</label>
+    <input type="text" id="bairro" required>
+
+    <label for="descricao">Descrição do Problema:</label>
+    <textarea id="descricao" rows="4" placeholder="Descreva o que está acontecendo..." required></textarea>
+
+    <label for="midia">Foto ou Vídeo:</label>
+    <input type="file" id="midia" accept="image/*,video/*" required>
+
+    <button type="submit">Enviar Denúncia</button>
+  </form>
+
+  <div id="map"></div>
+  <div class="sucesso" id="mensagemSucesso"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    const form = document.getElementById('formDenuncia');
+    const mapa = L.map('map').setView([-14.2350, -51.9253], 4); // Brasil
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(mapa);
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const estado = document.getElementById('estado').value;
+      const cidade = document.getElementById('cidade').value;
+      const bairro = document.getElementById('bairro').value;
+      const descricao = document.getElementById('descricao').value;
+
+      const localCompleto = `${bairro}, ${cidade}, ${estado}, Brasil`;
+
+      // Geolocalização usando Nominatim
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(localCompleto)}`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const lat = data[0].lat;
+        const lon = data[0].lon;
+
+        mapa.setView([lat, lon], 16);
+        L.marker([lat, lon]).addTo(mapa)
+          .bindPopup(`<strong>Problema:</strong><br>${descricao}`)
+          .openPopup();
+
+        document.getElementById('mensagemSucesso').innerText = "✅ Denúncia enviada com sucesso!";
+        form.reset();
+      } else {
+        alert("❌ Local não encontrado. Verifique os dados.");
+      }
+    });
+  </script>
+  <div><a href="index.html" style="display:inline-block; padding:10px 20px; background:#0077cc; color:white; text-decoration:none; border-radius:8px; margin-top:20px;">⬅ Voltar para a página inicial</a></div>
+</body>
+</html>
